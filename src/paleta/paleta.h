@@ -2,6 +2,7 @@
 
 #include "../sequencia/sequencia.h"
 #include <iostream>
+#include <string>
 #include <fstream>
 
 struct Cor {
@@ -11,6 +12,8 @@ struct Cor {
 class Paleta {
 private:
     Sequencia<Cor> cores;
+    uint8_t hexToNumber(const char hex);
+    Cor hexToColor(const std::string color, const char* arquivo, const int linha);
     
 public:
     Paleta() : cores() {}; // cria paleta vazia
