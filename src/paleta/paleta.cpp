@@ -10,6 +10,7 @@ Paleta::Paleta(const char *arquivo) {
             this->adicionarCor(); // fazer
         }
     }
+    paleta.close();
 }
 
 void Paleta::adicionarCor(Cor cor) {
