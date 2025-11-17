@@ -20,29 +20,11 @@ public:
     return dados[index];
   }
 
-  void resize(int size) {
+  void resize(int size, T init = T(), bool keep_size = false) {
     T *novo = new T[size];
 
     for (int i = 0; i < size; i++) {
-      if (i < capacidade) {
-        novo[i] = dados[i];
-      }
-      else if (i < size){
-        novo[i] = T();
-      }
-    }
-
-    delete[] dados;
-    dados = novo;
-
-    capacidade = size;
-    tamanho = size;
-  }
-  void resize(int size, T init) {
-    T *novo = new T[size];
-
-    for (int i = 0; i < size; i++) {
-      if (i < capacidade) {
+      if (i < tamanho) {
         novo[i] = dados[i];
       }
       else if (i < size){
@@ -54,7 +36,10 @@ public:
     dados = novo;
 
     capacidade = size;
-    tamanho = size;
+
+    if (!keep_size) {
+      tamanho = size;
+    }
   }
 
   int obterTamanho() { 
