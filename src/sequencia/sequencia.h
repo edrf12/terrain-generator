@@ -47,18 +47,24 @@ public:
   };
 
   void adicionar(T elemento) {
-    if (tamanho < capacidade) {
+    if (tamanho < capacidade / 2) {
       dados[tamanho] = elemento;
       tamanho++;
     }
     else {
-      resize(capacidade + 1, elemento);
+      resize(capacidade == 0 ? 2 : capacidade * 2, T(), true);
+      dados[tamanho] = elemento;
+      tamanho++;
     }
   }
 
   void removerUltimo() {
     if (tamanho > 0) {
       tamanho--;
+
+      if (tamanho <= capacidade / 4) {
+        resize(capacidade / 2, T(), true);
+      }
     }
   };
 };
