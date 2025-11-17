@@ -6,13 +6,13 @@ private:
   T *dados;
   
 public:
-  Sequencia<T>() : capacidade(0), tamanho(0), dados(nullptr) {};
+  Sequencia() : capacidade(-1), tamanho(0), dados(nullptr) {};
 
-  Sequencia<T>(int cap) : capacidade(cap), tamanho(0) {
+  Sequencia(int cap) : capacidade(cap), tamanho(0) {
     dados = new T[capacidade];
   }
 
-  ~Sequencia<T>() {
+  ~Sequencia() {
     delete[] dados;
   }
 
