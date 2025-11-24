@@ -1,3 +1,4 @@
+#include <iostream>
 template <typename T>
 class Sequencia {
 private:
@@ -6,7 +7,7 @@ private:
   T *dados;
   
 public:
-  Sequencia() : capacidade(-1), tamanho(0), dados(nullptr) {};
+  Sequencia() : capacidade(0), tamanho(0), dados(nullptr) {};
 
   Sequencia(int cap) : capacidade(cap), tamanho(0) {
     dados = new T[capacidade];
@@ -17,6 +18,10 @@ public:
   }
 
   T& operator[] (int index) {
+    if (index > tamanho) {
+      std::cerr << "[Sequencia]: Tried to read out of bounds index (" << index << ")." << std::endl;
+    }
+
     return dados[index];
   }
 
