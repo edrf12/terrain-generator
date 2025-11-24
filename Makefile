@@ -3,7 +3,7 @@
 # Compiler and Flags
 CXX = g++
 # -Isrc allows us to find doctest.h located in the src/ directory
-CXXFLAGS = -std=c++11 -Wall -Wextra -g -Isrc
+CXXFLAGS = -std=c++20 -Wall -Wextra -g -Isrc
 LDFLAGS = 
 
 # Directories
@@ -90,8 +90,8 @@ $(BIN_DIR)/paleta_test: src/paleta/paleta_testes.cpp $(OBJ_DIR)/paleta/paleta.o
 	@echo "==> Building test: $@"
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-# Rules for building the other tests (which are standalone)
-$(BIN_DIR)/imagem_test: src/imagem/imagem_testes.cpp
+# Rule for building the imagem test
+$(BIN_DIR)/imagem_test: src/imagem/imagem_testes.cpp src/imagem/imagem.cpp
 	@mkdir -p $(@D)
 	@echo "==> Building test: $@"
 	$(CXX) $(CXXFLAGS) $^ -o $@
