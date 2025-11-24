@@ -1,6 +1,6 @@
 #include "paleta.h"
 
-Paleta::Paleta(const char *arquivo) {
+Paleta::Paleta(const char *arquivo) : cores() {
     std::ifstream paleta(arquivo);
     if (paleta.is_open()) {
         int linha = 1;
