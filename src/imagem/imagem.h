@@ -1,21 +1,23 @@
 #pragma once
 
-#include "../sequencia/sequencia.h"
-#include "../paleta/paleta.h"
 #include <iostream>
 #include <fstream>
+#include <string>
 
-using Pixel = Cor;
+struct Pixel {
+    uint8_t r, g, b;
+};
 
 class Imagem {
 private:
-  Sequencia<Pixel> dados;
+  Pixel** dados;
   int altura;
   int largura;
 
 public:
-  Imagem() : dados(), altura(0), largura(0) {};
-  Imagem(int altura, int largura) : altura(altura), largura(largura) {};
+  Imagem() : altura(0), largura(0) {};
+  Imagem(int largura, int altura);
+  ~Imagem();
   Pixel& operator() (int largura, int altura);
 
   int obterAltura() {
