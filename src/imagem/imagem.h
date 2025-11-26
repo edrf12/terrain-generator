@@ -15,7 +15,7 @@ private:
   int largura;
 
 public:
-  Imagem() : altura(0), largura(0) {};
+  Imagem() : dados(nullptr), altura(0), largura(0) {};
   Imagem(int largura, int altura);
   ~Imagem();
   Pixel& operator() (int largura, int altura);
