@@ -81,12 +81,13 @@ bool Imagem::salvarPPM(const char* arquivo) {
       for (int j = 0; j < largura; j++) {
         imagem << (int) dados[i][j].r << " " << (int) dados[i][j].g << " " << (int) dados[i][j].b;
 
-        if (j != largura - 1) {
-          imagem << "  ";
-        }
+        // if (j != largura - 1) {
+          // imagem << "  ";
+        // }
+        imagem << std::endl;
       }
-      imagem << std::endl;
     }
+    imagem.close();
     return true;
   }
 
