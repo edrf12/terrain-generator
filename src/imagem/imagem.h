@@ -13,6 +13,8 @@ private:
   Pixel** dados;
   int altura;
   int largura;
+  void criarMatriz();
+  void liberarMemoria();
 
 public:
   Imagem() : dados(nullptr), altura(0), largura(0) {};
