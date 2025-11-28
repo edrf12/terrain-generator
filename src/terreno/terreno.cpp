@@ -17,10 +17,10 @@ int Terreno::operator() (int largura, int profundidade) {
 }
 
 void Terreno::criarMatriz() {
-  dados = new int*[tamanho];
+  dados = new double*[tamanho];
 
   for (int i = 0; i < tamanho; i++) {
-    dados[i] = new int[tamanho];
+    dados[i] = new double[tamanho];
   }
 }
 
@@ -30,9 +30,25 @@ void Terreno::liberarMemoria() {
   }
   delete[] dados;
 }
+int Terreno::gerarNumero() {   
+    srand(time(0));
+    int min(0), max(100);
+    int rnd = (rand() % (max - min + 1)) + min;
+    return rnd;
+}
+bool Terreno::gerarTerreno(double rugosidade){
+    criarMatriz();
 
-bool Terreno::gerarTerreno(double rugosidade) {
-  
+    dados[0][0] = gerarNumero();
+    dados[0][tamanho-1] = gerarNumero();
+    dados[tamanho-1][0] = gerarNumero();
+    dados[tamanho-1][tamanho-1] = gerarNumero();
+    int linha1 = 
+    //primeira diamond
+    dados[(tamanho-1)/2][(tamanho-1)/2] = gerarNumero(); 
+    //primeira square
+    dados[][(tamanho-1)/2] = gerarNumero();
+    dados[(tamanho-1)/2][] = gerarNumero();
 }
 
 bool Terreno::lerTerreno(const char* arquivo) {

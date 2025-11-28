@@ -1,9 +1,15 @@
 #include <cmath>
 #include <fstream>
+#include <ctime>
+#include <cstdlib>
+
+struct Ponto {
+  int x, y;
+};
 
 class Terreno {
 private:   
-  int** dados;
+  double** dados;
   int tamanho;
 
   void diamond();
@@ -13,6 +19,8 @@ private:
 
   void criarMatriz();
   void liberarMemoria();
+  int gerarNumero();
+
 public:
   Terreno(int tamanho);
   ~Terreno();
