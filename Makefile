@@ -101,7 +101,7 @@ $(BIN_DIR)/sequencia_test: src/sequencia/sequencia_testes.cpp
 	@echo "==> Building test: $@"
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-$(BIN_DIR)/terreno_test: src/terreno/terreno_testes.cpp
+$(BIN_DIR)/terreno_test: src/terreno/terreno_testes.cpp src/terreno/terreno.cpp
 	@mkdir -p $(@D)
 	@echo "==> Building test: $@"
 	$(CXX) $(CXXFLAGS) $^ -o $@

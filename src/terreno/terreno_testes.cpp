@@ -4,14 +4,21 @@
 
 TEST_CASE("Testa a criação de um terreno de uma única célula") {
   Terreno terreno(0); // 2^0 + 1 = 1
-  CHECK(terreno.obterLargura() == 1);
-  CHECK(terreno.obterProfundidade() == 1);
+  CHECK(terreno.obterLargura() == 2);
+  CHECK(terreno.obterProfundidade() == 2);
 }
 
 TEST_CASE("Testa a geração aleatória de altitudes") {
   Terreno terreno(2);
   CHECK(terreno.obterLargura() == 5);
   CHECK(terreno.obterProfundidade() == 5);
+}
+
+TEST_CASE("Testa a criação de um arquivo") {
+  Terreno terreno(2);
+  CHECK(terreno.obterLargura() == 5);
+  CHECK(terreno.gerarTerreno());
+  CHECK(terreno.salvarTerreno("terreno.txt"));
 }
 
 
