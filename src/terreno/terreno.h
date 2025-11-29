@@ -13,7 +13,7 @@ private:
   int tamanho;
 
   void diamond(Ponto p1, Ponto p2, Ponto p3, Ponto p4);
-  int media_square(Ponto ponto, int constante);
+  double media_square(Ponto ponto, int constante);
   void square(Ponto centro, Ponto referencia);
 
   void rand_altura();

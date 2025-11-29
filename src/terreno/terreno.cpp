@@ -21,6 +21,11 @@ void Terreno::criarMatriz() {
 
   for (int i = 0; i < tamanho; i++) {
     dados[i] = new double[tamanho];
+
+    // Inicializa como 0
+    for (int j = 0; j < tamanho; j++) {
+      dados[i][j] = 0;
+    }
   }
 }
 
@@ -33,14 +38,14 @@ void Terreno::liberarMemoria() {
 
 void Terreno::diamond(Ponto p1, Ponto p2, Ponto p3, Ponto p4) {
   if (p4.x - p1.x > 1 && p4.y - p1.y > 1) {
-    Ponto atual = { (p4.x - p1.x) / 2, (p4.y - p1.y ) / 2 };
-    dados[atual.y][atual.x] = (dados[p1.y][p1.x] + dados[p2.y][p2.x] + dados[p3.y][p3.x] + dados[p4.y][p4.x]) / 4; 
+    Ponto atual = { (p4.x - p1.x) / 2 + p1.x, (p4.y - p1.y ) / 2 + p1.y };
+    dados[atual.y][atual.x] = (dados[p1.y][p1.x] + dados[p2.y][p2.x] + dados[p3.y][p3.x] + dados[p4.y][p4.x]) / 4;
 
     square(atual, p1);
   }
 };
 
-int Terreno::media_square(Ponto ponto, int constante) {
+double Terreno::media_square(Ponto ponto, int constante) {
   Ponto pontos[4] { 
     { ponto.x - constante, ponto.y },
     { ponto.x + constante, ponto.y },
@@ -49,9 +54,9 @@ int Terreno::media_square(Ponto ponto, int constante) {
   };
 
   int qtd = 0;
-  int sum = 0;
+  double sum = 0;
   for (int i = 0; i < 4; i++) {
-    if (pontos[i].x > 0 && pontos[i].x < tamanho && pontos[i].y > 0 && pontos[i].y < tamanho) {
+    if (pontos[i].x >= 0 && pontos[i].x < tamanho && pontos[i].y >= 0 && pontos[i].y < tamanho) {
       sum += dados[pontos[i].y][pontos[i].x]; 
       qtd++;
     }
@@ -60,7 +65,7 @@ int Terreno::media_square(Ponto ponto, int constante) {
 }
 
 void Terreno::square(Ponto centro, Ponto referencia) {
-  if (centro.y - referencia.y > 1 && centro.x - referencia.x > 1) {
+  if (centro.y - referencia.y > 0 && centro.x - referencia.x > 0) {
     int constante = centro.x - referencia.x;
     Ponto p1 = { centro.x, referencia.y};
     Ponto p2 = { referencia.x, centro.y };
@@ -73,9 +78,8 @@ void Terreno::square(Ponto centro, Ponto referencia) {
     dados[p4.y][p4.x] = media_square(p4, constante);
 
     diamond(referencia, p1, p2, centro);
-    // TODO: Conferir
-    diamond(p1, { p1.x + constante, p1.y }, centro, p2);
-    diamond(p4, centro, { p3.x - constante, p3.y }, p3);
+    diamond(p1, { p1.x + constante, p1.y }, centro, p4);
+    diamond(p2, centro, { p3.x - constante, p3.y }, p3);
     diamond(centro, p2, p3, { p3.x + constante, p3.y });
   }
 }
