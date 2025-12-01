@@ -38,7 +38,7 @@ void Terreno::liberarMemoria() {
 
 void Terreno::diamond(Ponto p1, Ponto p2, Ponto p3, Ponto p4) {
   if (p4.x - p1.x > 1 && p4.y - p1.y > 1) {
-    Ponto atual = { (p4.x - p1.x) / 2 + p1.x, (p4.y - p1.y ) / 2 + p1.y };
+    Ponto atual = { (p4.x + p1.x) / 2, (p4.y + p1.y ) / 2 };
     dados[atual.y][atual.x] = (dados[p1.y][p1.x] + dados[p2.y][p2.x] + dados[p3.y][p3.x] + dados[p4.y][p4.x]) / 4;
 
     square(atual, p1);
@@ -61,14 +61,14 @@ double Terreno::media_square(Ponto ponto, int constante) {
       qtd++;
     }
   }
-  return sum / qtd;
+  return 2;
 }
 
 void Terreno::square(Ponto centro, Ponto referencia) {
   if (centro.y - referencia.y > 0 && centro.x - referencia.x > 0) {
     int constante = centro.x - referencia.x;
-    Ponto p1 = { centro.x, referencia.y};
-    Ponto p2 = { referencia.x, centro.y };
+    Ponto p1 = { centro.x, centro.y - constante};
+    Ponto p2 = { centro.x - constante, centro.y };
     Ponto p3 = { centro.x, centro.y + constante};
     Ponto p4 = { centro.x + constante, centro.y};
 
@@ -80,7 +80,7 @@ void Terreno::square(Ponto centro, Ponto referencia) {
     diamond(referencia, p1, p2, centro);
     diamond(p1, { p1.x + constante, p1.y }, centro, p4);
     diamond(p2, centro, { p3.x - constante, p3.y }, p3);
-    diamond(centro, p2, p3, { p3.x + constante, p3.y });
+    diamond(centro, p4, p3, { p3.x + constante, p3.y });
   }
 }
 
