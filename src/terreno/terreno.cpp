@@ -36,12 +36,17 @@ void Terreno::liberarMemoria() {
   delete[] dados;
 }
 
-void Terreno::diamond(Ponto p1, Ponto p2, Ponto p3, Ponto p4) {
-  if (p4.x - p1.x > 1 && p4.y - p1.y > 1) {
-    Ponto atual = { (p4.x + p1.x) / 2, (p4.y + p1.y ) / 2 };
-    dados[atual.y][atual.x] = (dados[p1.y][p1.x] + dados[p2.y][p2.x] + dados[p3.y][p3.x] + dados[p4.y][p4.x]) / 4;
+void Terreno::diamond(int constante, double deslocamento) {
+  int mconstante = constante / 2;
+  for (int y = mconstante; y < tamanho - 1; y += constante) {
+    for (int x = mconstante; x < tamanho - 1; x += constante) {
+      int p1 = dados[y - mconstante][x - mconstante];
+      int p2 = dados[y - mconstante][x + mconstante];
+      int p3 = dados[y + mconstante][x - mconstante];
+      int p4 = dados[y + mconstante][x + mconstante];
 
-    square(atual, p1);
+      dados[y][x] = (p1 + p2 + p3 + p4) / 4.0 + gerarNumero(0, deslocamento);
+    }
   }
 };
 
@@ -61,34 +66,21 @@ double Terreno::media_square(Ponto ponto, int constante) {
       qtd++;
     }
   }
-  return 2;
+  return sum / qtd;
 }
 
-void Terreno::square(Ponto centro, Ponto referencia) {
-  if (centro.y - referencia.y > 0 && centro.x - referencia.x > 0) {
-    int constante = centro.x - referencia.x;
-    Ponto p1 = { centro.x, centro.y - constante};
-    Ponto p2 = { centro.x - constante, centro.y };
-    Ponto p3 = { centro.x, centro.y + constante};
-    Ponto p4 = { centro.x + constante, centro.y};
-
-    dados[p1.y][p1.x] = media_square(p1, constante);
-    dados[p2.y][p2.x] = media_square(p2, constante);
-    dados[p3.y][p3.x] = media_square(p3, constante);
-    dados[p4.y][p4.x] = media_square(p4, constante);
-
-    diamond(referencia, p1, p2, centro);
-    diamond(p1, { p1.x + constante, p1.y }, centro, p4);
-    diamond(p2, centro, { p3.x - constante, p3.y }, p3);
-    diamond(centro, p4, p3, { p3.x + constante, p3.y });
+void Terreno::square(int constante, double deslocamento) {
+  int mconstante = constante / 2;
+  for (int y = 0; y < tamanho; y += mconstante) {
+    for (int x = ((y / mconstante) % 2 == 0) ? mconstante : 0; x < tamanho; x += constante) {
+      dados[y][x] = media_square({ x, y }, mconstante) + gerarNumero(0, deslocamento);
+    }
   }
 }
 
-int Terreno::gerarNumero() {   
-    // int min(0), max(100);
-    // int rnd = (rand() % (max - min + 1)) + min;
-    // return rnd;
-    return 1;
+double Terreno::gerarNumero(int min, int max) {   
+    double rnd = (double) rand() / RAND_MAX;
+    return min + rnd * (max - min);
 }
 
 bool Terreno::gerarTerreno(double rugosidade){
@@ -100,7 +92,16 @@ bool Terreno::gerarTerreno(double rugosidade){
     dados[tamanho-1][0] = gerarNumero();
     dados[tamanho-1][tamanho-1] = gerarNumero();
 
-    diamond({0, 0}, {tamanho - 1, 0}, {0, tamanho - 1}, {tamanho -1 , tamanho - 1});
+    int constante = tamanho - 1;
+    double deslocamento = 10;
+
+    while (constante > 1) {
+      diamond(constante, deslocamento);
+      square(constante, deslocamento);
+      
+      deslocamento *= rugosidade;
+      constante /= 2;
+    }
 
     return true;
 }

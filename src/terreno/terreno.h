@@ -12,15 +12,13 @@ private:
   double** dados = nullptr;
   int tamanho;
 
-  void diamond(Ponto p1, Ponto p2, Ponto p3, Ponto p4);
+  void diamond(int constante, double deslocamento);
   double media_square(Ponto ponto, int constante);
-  void square(Ponto centro, Ponto referencia);
-
-  void rand_altura();
+  void square(int constante, double deslocamento);
 
   void criarMatriz();
   void liberarMemoria();
-  int gerarNumero();
+  double gerarNumero(int min = 0, int max = 100);
 
 public:
   Terreno(int tamanho);
