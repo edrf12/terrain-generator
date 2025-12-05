@@ -17,10 +17,12 @@ void Imagem::criarMatriz() {
 }
 
 void Imagem::liberarMemoria() {
-  for (int i = 0; i < altura; i++) {
-    delete[] dados[i];
+  if (dados != nullptr) {
+    for (int i = 0; i < altura; i++) {
+      delete[] dados[i];
+    }
+    delete[] dados;
   }
-  delete[] dados;
 }
 
 Pixel& Imagem::operator() (int largura, int altura) {

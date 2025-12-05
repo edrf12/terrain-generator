@@ -3,12 +3,7 @@
 Terreno::Terreno(int tamanho) : tamanho(std::pow(2, tamanho) + 1) {}
 
 Terreno::~Terreno() {
-  if (dados != nullptr) {
-    for (int i = 0; i < tamanho; i++) {
-      delete[] dados[i];
-    }
-  }
-  delete[] dados;
+  liberarMemoria();
 }
 
 // (x, y)
@@ -30,10 +25,17 @@ void Terreno::criarMatriz() {
 }
 
 void Terreno::liberarMemoria() {
-  for (int i = 0; i < tamanho; i++) {
-    delete[] dados[i];
+  if (dados != nullptr) {
+    for (int i = 0; i < tamanho; i++) {
+      delete[] dados[i];
+    }
+    delete[] dados;
   }
-  delete[] dados;
+}
+
+double Terreno::gerarNumero(int min, int max) {   
+    double rnd = (double) rand() / RAND_MAX;
+    return min + rnd * (max - min);
 }
 
 void Terreno::diamond(int constante, double deslocamento) {
@@ -78,9 +80,22 @@ void Terreno::square(int constante, double deslocamento) {
   }
 }
 
-double Terreno::gerarNumero(int min, int max) {   
-    double rnd = (double) rand() / RAND_MAX;
-    return min + rnd * (max - min);
+void Terreno::imagemCores(Imagem& imagem, Paleta& cores) {
+  // A cor do pixel será determinada por certo intervalo
+  // Sendo n o tamanho da paleta
+  // O tamanho dos intervalos é calculado por 100/n
+  // O intervalo a que uma coisa pertence é x/(100/n) ou melhor (x*n)/100
+
+  for (int y = 0; y < tamanho; y++) {
+    for (int x = 0; x < tamanho; x++) {
+      int intervalo = dados[y][x] == 100 ? cores.obterTamanho() - 1 : (cores.obterTamanho() * dados[y][x])/ 99;
+      Pixel cor = cores.obterCor(intervalo);
+      imagem(x, y) = cor;
+    }
+  }
+}
+
+void Terreno::imagemLuz(Imagem& imagem, Paleta& cores) {
 }
 
 bool Terreno::gerarTerreno(double rugosidade){
@@ -145,4 +160,24 @@ bool Terreno::salvarTerreno(const char* arquivo) {
   }
 
   return false;
+}
+
+bool Terreno::salvarImagem(int tipo, const char* arquivo, Paleta& cores) {
+  Imagem imagem(tamanho, tamanho);
+
+  switch (tipo) {
+    case IMAGEM_TIPO_GRAYSCALE:
+      return false;
+    case IMAGEM_TIPO_COR:
+      imagemCores(imagem, cores);
+      break;
+    case IMAGEM_TIPO_LUZ:
+      imagemCores(imagem, cores);
+      imagemLuz(imagem, cores);
+      break;
+  }
+
+  imagem.salvarPPM(arquivo);
+
+  return true;
 }

@@ -3,10 +3,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "../paleta/paleta.h"
 
-struct Pixel {
-    uint8_t r, g, b;
-};
+using Pixel = Cor;
 
 class Imagem {
 private:

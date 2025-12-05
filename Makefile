@@ -91,7 +91,7 @@ $(BIN_DIR)/paleta_test: src/paleta/paleta_testes.cpp $(OBJ_DIR)/paleta/paleta.o
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 # Rule for building the imagem test
-$(BIN_DIR)/imagem_test: src/imagem/imagem_testes.cpp src/imagem/imagem.cpp
+$(BIN_DIR)/imagem_test: src/imagem/imagem_testes.cpp src/imagem/imagem.cpp src/paleta/paleta.cpp
 	@mkdir -p $(@D)
 	@echo "==> Building test: $@"
 	$(CXX) $(CXXFLAGS) $^ -o $@
@@ -101,7 +101,7 @@ $(BIN_DIR)/sequencia_test: src/sequencia/sequencia_testes.cpp
 	@echo "==> Building test: $@"
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-$(BIN_DIR)/terreno_test: src/terreno/terreno_testes.cpp src/terreno/terreno.cpp
+$(BIN_DIR)/terreno_test: src/terreno/terreno_testes.cpp src/terreno/terreno.cpp src/imagem/imagem.cpp src/paleta/paleta.cpp
 	@mkdir -p $(@D)
 	@echo "==> Building test: $@"
 	$(CXX) $(CXXFLAGS) $^ -o $@

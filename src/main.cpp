@@ -50,4 +50,5 @@ int main(int argc, char* argv[]) {
   
   Paleta cores(argv[1]);
   Terreno altitudes(std::stoi(argv[2]));
+  altitudes.salvarImagem(IMAGEM_TIPO_COR, argv[3], cores);
 }

@@ -21,6 +21,13 @@ TEST_CASE("Testa a criação de um arquivo") {
   CHECK(terreno.salvarTerreno("terreno.txt"));
 }
 
+TEST_CASE("Testa o salvamento de uma imagem") {
+  Terreno terreno(12);
+  Paleta paleta ("cores.hex");
+  CHECK(terreno.gerarTerreno());
+  CHECK(terreno.salvarImagem(IMAGEM_TIPO_COR, "teste.ppm", paleta));
+}
+
 // Você precisará criar testes adicionais para cobrir os métodos privados da classe.
 // Por exemplo, você pode criar testes para os métodos das etapas Square e Diamond
 // Você pode torná-los públicos temporariamente para fins de teste ou usar técnicas como "friend testing".
