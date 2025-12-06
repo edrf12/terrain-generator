@@ -36,7 +36,7 @@ all: default
 
 # Rule to link the main program.
 # This will fail until src/main.cpp is created.
-$(MAIN_BIN): src/main.cpp $(CORE_OBJS)
+$(MAIN_BIN): src/main.cpp src/paleta/paleta.cpp src/terreno/terreno.cpp src/imagem/imagem.cpp
 	@mkdir -p $(@D)
 	@echo "==> Linking main executable..."
 	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS)
