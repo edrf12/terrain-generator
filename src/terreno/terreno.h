@@ -25,17 +25,17 @@ private:
 
   double gerarNumero(int min = 0, int max = 100);
   void diamond(int constante, double deslocamento);
-  double media_square(Ponto ponto, int constante);
   void square(int constante, double deslocamento);
+  double media_square(Ponto ponto, int constante);
   
   void imagemCores(Imagem& imagem, Paleta& cores);
-  void imagemLuz(Imagem& imagem, Paleta& cores);
+  void imagemLuz(Imagem& imagem, Paleta& cores, double reducao = 0.5);
 public:
   Terreno(int tamanho);
   ~Terreno();
   int operator() (int largura, int profundidade);
 
-  bool gerarTerreno(double rugosidade = 0.5);
+  bool gerarTerreno(double rugosidade = 0.1);
   bool lerTerreno(const char* arquivo);
   bool salvarTerreno(const char* arquivo);
   bool salvarImagem(int tipo, const char* arquivo, Paleta& cores);

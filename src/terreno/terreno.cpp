@@ -52,6 +52,15 @@ void Terreno::diamond(int constante, double deslocamento) {
   }
 };
 
+void Terreno::square(int constante, double deslocamento) {
+  int mconstante = constante / 2;
+  for (int y = 0; y < tamanho; y += mconstante) {
+    for (int x = ((y / mconstante) % 2 == 0) ? mconstante : 0; x < tamanho; x += constante) {
+      dados[y][x] = media_square({ x, y }, mconstante) + gerarNumero(0, deslocamento);
+    }
+  }
+}
+
 double Terreno::media_square(Ponto ponto, int constante) {
   Ponto pontos[4] { 
     { ponto.x - constante, ponto.y },
@@ -71,15 +80,6 @@ double Terreno::media_square(Ponto ponto, int constante) {
   return sum / qtd;
 }
 
-void Terreno::square(int constante, double deslocamento) {
-  int mconstante = constante / 2;
-  for (int y = 0; y < tamanho; y += mconstante) {
-    for (int x = ((y / mconstante) % 2 == 0) ? mconstante : 0; x < tamanho; x += constante) {
-      dados[y][x] = media_square({ x, y }, mconstante) + gerarNumero(0, deslocamento);
-    }
-  }
-}
-
 void Terreno::imagemCores(Imagem& imagem, Paleta& cores) {
   // A cor do pixel será determinada por certo intervalo
   // Sendo n o tamanho da paleta
@@ -95,7 +95,19 @@ void Terreno::imagemCores(Imagem& imagem, Paleta& cores) {
   }
 }
 
-void Terreno::imagemLuz(Imagem& imagem, Paleta& cores) {
+void Terreno::imagemLuz(Imagem& imagem, Paleta& cores, double reducao) {
+  imagemCores(imagem, cores);
+  for (int y = 1; y < tamanho; y++) {
+    for (int x = 1; x < tamanho; x++) {
+      if (dados[y-1][x-1] > dados[y][x]) {
+        Pixel cor = imagem(x, y);
+        cor.r *= reducao;
+        cor.g *= reducao;
+        cor.b *= reducao;
+        imagem(x, y) = cor;
+      }
+    }
+  }
 }
 
 bool Terreno::gerarTerreno(double rugosidade){
@@ -172,7 +184,6 @@ bool Terreno::salvarImagem(int tipo, const char* arquivo, Paleta& cores) {
       imagemCores(imagem, cores);
       break;
     case IMAGEM_TIPO_LUZ:
-      imagemCores(imagem, cores);
       imagemLuz(imagem, cores);
       break;
   }

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <cstdint>
 
 struct Cor {
     uint8_t r, g, b;
