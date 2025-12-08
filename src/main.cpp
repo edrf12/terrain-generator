@@ -7,10 +7,6 @@
 #include "terreno/terreno.h"
 
 int main(int argc, char* argv[]) {
-  //=======================================//
-  //======== Argument verification ========//
-  //=======================================//
-  
   // Check if all arguments were given
   if (argc != 4) {
     std::cerr << "usage: " << argv[0] << " <paleta> <tamanho> <saida>" << std::endl;
@@ -29,13 +25,13 @@ int main(int argc, char* argv[]) {
   // Check if tamanho is an integer
   if (argv[2] == NULL || *argv[2] == '\0') {
     std::cerr << argv[0] << ": Size cannot be null" << std::endl;
-    return 0;
+    return 1;
   }
 
   for (int i = 0; argv[2][i] != '\0'; i++) {
     if (!std::isdigit(argv[2][i])) {
       std::cerr << argv[0] << ": Size needs to be a number" << std::endl;
-      return 0;
+      return 1;
     }
   }
 
@@ -50,5 +46,6 @@ int main(int argc, char* argv[]) {
   
   Paleta cores(argv[1]);
   Terreno altitudes(std::stoi(argv[2]));
+  altitudes.gerarTerreno();
   altitudes.salvarImagem(IMAGEM_TIPO_COR, argv[3], cores);
 }
