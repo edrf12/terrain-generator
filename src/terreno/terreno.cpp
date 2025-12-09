@@ -12,10 +12,10 @@ int Terreno::operator() (int largura, int profundidade) {
 }
 
 void Terreno::criarMatriz() {
-  dados = new double*[tamanho];
+  dados = new int*[tamanho];
 
   for (int i = 0; i < tamanho; i++) {
-    dados[i] = new double[tamanho];
+    dados[i] = new int[tamanho];
 
     // Inicializa como 0
     for (int j = 0; j < tamanho; j++) {
@@ -33,12 +33,12 @@ void Terreno::liberarMemoria() {
   }
 }
 
-double Terreno::gerarNumero(int min, int max) {   
-    double rnd = (double) rand() / RAND_MAX;
-    return min + rnd * (max - min);
+int Terreno::gerarNumero(int min, int max) {   
+    int rnd = (rand() % (max - min + 1)) + min;
+    return rnd;
 }
 
-void Terreno::diamond(int constante, double deslocamento) {
+void Terreno::diamond(int constante, int deslocamento) {
   int mconstante = constante / 2;
   for (int y = mconstante; y < tamanho - 1; y += constante) {
     for (int x = mconstante; x < tamanho - 1; x += constante) {
@@ -47,21 +47,23 @@ void Terreno::diamond(int constante, double deslocamento) {
       int p3 = dados[y + mconstante][x - mconstante];
       int p4 = dados[y + mconstante][x + mconstante];
 
-      dados[y][x] = (p1 + p2 + p3 + p4) / 4.0 + gerarNumero(0, deslocamento);
+      int valor = round((p1 + p2 + p3 + p4) / 4.0) + gerarNumero(-deslocamento, deslocamento);
+      dados[y][x] = valor < 0 ? 0 : valor;
     }
   }
 };
 
-void Terreno::square(int constante, double deslocamento) {
+void Terreno::square(int constante, int deslocamento) {
   int mconstante = constante / 2;
   for (int y = 0; y < tamanho; y += mconstante) {
     for (int x = ((y / mconstante) % 2 == 0) ? mconstante : 0; x < tamanho; x += constante) {
-      dados[y][x] = media_square({ x, y }, mconstante) + gerarNumero(0, deslocamento);
+      int valor = media_square({ x, y }, mconstante) + gerarNumero(-deslocamento, deslocamento);
+      dados[y][x] = valor < 0 ? 0 : valor;
     }
   }
 }
 
-double Terreno::media_square(Ponto ponto, int constante) {
+int Terreno::media_square(Ponto ponto, int constante) {
   Ponto pontos[4] { 
     { ponto.x - constante, ponto.y },
     { ponto.x + constante, ponto.y },
@@ -70,14 +72,14 @@ double Terreno::media_square(Ponto ponto, int constante) {
   };
 
   int qtd = 0;
-  double sum = 0;
+  int sum = 0;
   for (int i = 0; i < 4; i++) {
     if (pontos[i].x >= 0 && pontos[i].x < tamanho && pontos[i].y >= 0 && pontos[i].y < tamanho) {
       sum += dados[pontos[i].y][pontos[i].x]; 
       qtd++;
     }
   }
-  return sum / qtd;
+  return round(sum / qtd);
 }
 
 void Terreno::imagemCores(Imagem& imagem, Paleta& cores) {
@@ -88,29 +90,27 @@ void Terreno::imagemCores(Imagem& imagem, Paleta& cores) {
 
   for (int y = 0; y < tamanho; y++) {
     for (int x = 0; x < tamanho; x++) {
-      int intervalo = dados[y][x] == 100 ? cores.obterTamanho() - 1 : (cores.obterTamanho() * dados[y][x])/ 99;
-      Pixel cor = cores.obterCor(intervalo);
+      int intervalo = dados[y][x] == 1000 ? cores.obterTamanho() - 1 : (cores.obterTamanho() * (int) dados[y][x])/ 1000;
+      Pixel cor = intervalo > cores.obterTamanho() ? cores.obterCor(cores.obterTamanho() - 1) :cores.obterCor(intervalo);
       imagem(x, y) = cor;
     }
   }
 }
 
-void Terreno::imagemLuz(Imagem& imagem, Paleta& cores, double reducao) {
+void Terreno::imagemLuz(Imagem& imagem, Paleta& cores, int reducao) {
   imagemCores(imagem, cores);
   for (int y = 1; y < tamanho; y++) {
     for (int x = 1; x < tamanho; x++) {
       if (dados[y-1][x-1] > dados[y][x]) {
-        Pixel cor = imagem(x, y);
-        cor.r *= reducao;
-        cor.g *= reducao;
-        cor.b *= reducao;
-        imagem(x, y) = cor;
+        imagem(x, y).r /= reducao;
+        imagem(x, y).g /= reducao;
+        imagem(x, y).b /= reducao;
       }
     }
   }
 }
 
-bool Terreno::gerarTerreno(double rugosidade){
+bool Terreno::gerarTerreno(int rugosidade){
     criarMatriz();
 
     srand(time(0));
@@ -120,13 +120,13 @@ bool Terreno::gerarTerreno(double rugosidade){
     dados[tamanho-1][tamanho-1] = gerarNumero();
 
     int constante = tamanho - 1;
-    double deslocamento = 10;
+    int deslocamento = 500;
 
     while (constante > 1) {
       diamond(constante, deslocamento);
       square(constante, deslocamento);
       
-      deslocamento *= rugosidade;
+      deslocamento /= rugosidade;
       constante /= 2;
     }
 
@@ -174,7 +174,7 @@ bool Terreno::salvarTerreno(const char* arquivo) {
   return false;
 }
 
-bool Terreno::salvarImagem(int tipo, const char* arquivo, Paleta& cores) {
+bool Terreno::salvarImagem(int tipo, const char* arquivo, Paleta& cores, int reducao) {
   Imagem imagem(tamanho, tamanho);
 
   switch (tipo) {
@@ -184,7 +184,7 @@ bool Terreno::salvarImagem(int tipo, const char* arquivo, Paleta& cores) {
       imagemCores(imagem, cores);
       break;
     case IMAGEM_TIPO_LUZ:
-      imagemLuz(imagem, cores);
+      imagemLuz(imagem, cores, reducao);
       break;
   }
 

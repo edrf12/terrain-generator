@@ -17,28 +17,28 @@ struct Ponto {
 
 class Terreno {
 private:   
-  double** dados = nullptr;
+  int** dados = nullptr;
   int tamanho;
 
   void criarMatriz();
   void liberarMemoria();
 
-  double gerarNumero(int min = 0, int max = 100);
-  void diamond(int constante, double deslocamento);
-  void square(int constante, double deslocamento);
-  double media_square(Ponto ponto, int constante);
+  int gerarNumero(int min = 0, int max = 1000);
+  void diamond(int constante, int deslocamento);
+  void square(int constante, int deslocamento);
+  int media_square(Ponto ponto, int constante);
   
   void imagemCores(Imagem& imagem, Paleta& cores);
-  void imagemLuz(Imagem& imagem, Paleta& cores, double reducao = 0.5);
+  void imagemLuz(Imagem& imagem, Paleta& cores, int reducao = 2);
 public:
   Terreno(int tamanho);
   ~Terreno();
   int operator() (int largura, int profundidade);
 
-  bool gerarTerreno(double rugosidade = 0.1);
+  bool gerarTerreno(int rugosidade = 2);
   bool lerTerreno(const char* arquivo);
   bool salvarTerreno(const char* arquivo);
-  bool salvarImagem(int tipo, const char* arquivo, Paleta& cores);
+  bool salvarImagem(int tipo, const char* arquivo, Paleta& cores, int reducao = 2);
 
   int obterLargura() {
     return tamanho;
