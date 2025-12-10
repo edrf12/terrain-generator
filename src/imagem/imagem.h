@@ -3,16 +3,17 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "../paleta/paleta.h"
 
-struct Pixel {
-    uint8_t r, g, b;
-};
+using Pixel = Cor;
 
 class Imagem {
 private:
   Pixel** dados;
   int altura;
   int largura;
+  void criarMatriz();
+  void liberarMemoria();
 
 public:
   Imagem() : dados(nullptr), altura(0), largura(0) {};

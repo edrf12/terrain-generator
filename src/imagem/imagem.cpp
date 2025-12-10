@@ -1,6 +1,14 @@
 #include "imagem.h"
 
 Imagem::Imagem(int largura, int altura) : altura(altura), largura(largura) {
+ criarMatriz(); 
+}
+
+Imagem::~Imagem() {
+  liberarMemoria();
+}
+
+void Imagem::criarMatriz() {
   dados = new Pixel*[altura];
 
   for (int i = 0; i < altura; i++) {
@@ -8,11 +16,13 @@ Imagem::Imagem(int largura, int altura) : altura(altura), largura(largura) {
   }
 }
 
-Imagem::~Imagem() {
-  for (int i = 0; i < altura; i++) {
-    delete[] dados[i];
+void Imagem::liberarMemoria() {
+  if (dados != nullptr) {
+    for (int i = 0; i < altura; i++) {
+      delete[] dados[i];
+    }
+    delete[] dados;
   }
-  delete[] dados;
 }
 
 Pixel& Imagem::operator() (int largura, int altura) {
@@ -20,9 +30,13 @@ Pixel& Imagem::operator() (int largura, int altura) {
 }
 
 bool Imagem::lerPPM(const char* arquivo) {
+  int altura;
+  int largura;
+
   std::ifstream imagem(arquivo);
   if (imagem.is_open()) {
     int linha = 1;
+
 
     while (linha <= 3) {
       if (linha == 1) {
@@ -32,10 +46,7 @@ bool Imagem::lerPPM(const char* arquivo) {
       }
 
       if (linha == 2) {
-        int largura, altura;
         imagem >> largura >> altura;
-        this->largura = largura;
-        this->altura = altura;
       }
 
       if (linha == 3) {
@@ -48,11 +59,12 @@ bool Imagem::lerPPM(const char* arquivo) {
       linha++;
     }
 
-    dados = new Pixel*[altura];
+    liberarMemoria();
 
-    for (int i = 0; i < altura; i++) {
-      dados[i] = new Pixel[largura];
-    }
+    this->altura = altura;
+    this->largura = largura;
+
+    criarMatriz();
 
     for (int i = 0; i < altura; i++) {
       for (int j = 0; j < largura; j++) {
